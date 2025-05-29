@@ -2,8 +2,7 @@
 
 declare class YouTubeVideoDownloader {
 	private readonly videoId;
-	private readonly audioProgressCallback?;
-	private readonly videoProgressCallback?;
+	private readonly progressCallbacks?;
 	private serverAbrStream;
 	private info;
 	private title;
@@ -11,7 +10,10 @@ declare class YouTubeVideoDownloader {
 	private audioFormat;
 	private videoOutput;
 	private videoFormat;
-	constructor(videoId: string, audioProgressCallback?: ((percentage: number) => void) | undefined, videoProgressCallback?: ((percentage: number) => void) | undefined);
+	constructor(videoId: string, progressCallbacks?: {
+		audio?: (percentage: number) => void;
+		video?: (percentage: number) => void;
+	} | undefined);
 	setup(): Promise<void>;
 	prepareAudioDownload(downloadPath?: string): string;
 	prepareVideoDownload(downloadPath?: string): string;

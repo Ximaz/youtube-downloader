@@ -3,7 +3,8 @@ import { type WriteStream, createWriteStream } from 'node:fs';
 import { Innertube, UniversalCache } from 'youtubei.js';
 import GoogleVideo, { type Format } from 'googlevideo';
 import generateWebPoToken from './generateWebPoToken';
-import VideoInfo from "../node_modules/youtubei.js/dist/src/parser/youtube/VideoInfo"
+
+type VideoInfo = Awaited<ReturnType<typeof Innertube.prototype.getBasicInfo>>
 
 export default class YouTubeVideoDownloader {
     private serverAbrStream: GoogleVideo.ServerAbrStream | null = null;
@@ -14,7 +15,7 @@ export default class YouTubeVideoDownloader {
     private videoOutput: WriteStream | undefined = undefined;
     private videoFormat: Format | undefined = undefined;
 
-    constructor(private readonly videoId: string, private readonly audioProgressCallback?: (percentage: number) => void, private readonly videoProgressCallback?: (percentage: number) => void) { }
+    constructor(private readonly videoId: string, private readonly progressCallbacks?: { audio?: (percentage: number) => void, video?: (percentage: number) => void }) { }
 
     async setup(): Promise<void> {
         const innertube = await Innertube.create({ cache: new UniversalCache(true) });
@@ -63,10 +64,13 @@ export default class YouTubeVideoDownloader {
                 }
 
                 const contentLength = mediaFormat?.content_length ?? 0;
-                const downloadedBytes = isVideo ? downloadedBytesVideo : downloadedBytesAudio;
-                const progressCallback = isVideo ? this.videoProgressCallback : this.audioProgressCallback;
+                if (undefined === this.progressCallbacks || 0 == contentLength)
+                    return;
 
-                if (contentLength > 0 && undefined !== progressCallback)
+                const downloadedBytes = isVideo ? downloadedBytesVideo : downloadedBytesAudio;
+                const progressCallback = isVideo ? this.progressCallbacks.video : this.progressCallbacks.audio;
+
+                if (undefined !== progressCallback)
                     progressCallback((downloadedBytes / contentLength) * 100);
             }
         });
@@ -107,21 +111,15 @@ export default class YouTubeVideoDownloader {
     }
 
     async start(): Promise<void> {
-
         await this.serverAbrStream!.init({
             audioFormats: this.audioFormat ? [this.audioFormat] : [],
             videoFormats: this.videoFormat ? [this.videoFormat] : [],
             clientAbrState: {
                 playerTimeMs: 0,
-                enabledTrackTypesBitfield: this.videoFormat ? 0 : 1 // 0 = BOTH, 1 = AUDIO (video-only is no longer supported by YouTube)
+                enabledTrackTypesBitfield: this.videoFormat ? 0 : 1
             }
         });
-
-
-        if (this.audioOutput)
-            this.audioOutput.end();
-
-        if (this.videoOutput)
-            this.videoOutput.end();
+        this.audioOutput?.end();
+        this.videoOutput?.end();
     }
 }
