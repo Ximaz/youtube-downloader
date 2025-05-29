@@ -1,0 +1,37 @@
+{
+  "name": "youtube-downloader",
+  "private": true,
+  "scripts": {
+    "build": "bun run build.ts",
+    "prepublishOnly": "bun run build"
+  },
+  "exports": {
+    "types": "./dist/index.d.ts",
+    "import": "./dist/index.js",
+    "require": "./dist/index.cjs"
+  },
+  "files": [
+    "dist"
+  ],
+  "devDependencies": {
+    "bun-plugin-dts": "^0.3.0",
+    "@types/bun": "latest",
+    "@types/jsdom": "^21.1.7"
+  },
+  "peerDependencies": {
+    "typescript": "^5"
+  },
+  "dependencies": {
+    "bgutils-js": "^3.2.0",
+    "googlevideo": "^3.0.0",
+    "jsdom": "^26.1.0",
+    "youtubei.js": "^13.4.0"
+  },
+  "homepage": "https://github.com/Ximaz/youtube-downloader#readme",
+  "repository": {
+    "type": "git",
+    "url": "git+https://github.com/Ximaz/youtube-downloader.git"
+  },
+  "bugs": "https://github.com/Ximaz/youtube-downloader/issues",
+  "author": "DURAND Malo <durand.malo.60590@gmail.com>"
+}

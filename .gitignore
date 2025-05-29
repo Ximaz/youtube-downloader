@@ -1,0 +1,9 @@
+# dependencies (bun install)
+node_modules
+
+# Finder (MacOS) folder config
+.DS_Store
+
+# Extras
+.vscode
+main.ts
