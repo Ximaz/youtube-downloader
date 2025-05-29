@@ -4,7 +4,13 @@ import dts from 'bun-plugin-dts'
 const defaultBuildConfig: BuildConfig = {
     entrypoints: ['./src/index.ts'],
     outdir: './dist',
-    target: 'node'
+    target: 'node',
+    external: [
+        "bgutils-js",
+        "googlevideo",
+        "jsdom",
+        "youtubei.js"
+    ]
 }
 
 await Promise.all([
