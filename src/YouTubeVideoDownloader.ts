@@ -40,7 +40,7 @@ export default class YouTubeVideoDownloader {
             durationMs
         });
 
-        this.title = this.info.basic_info.title?.replace(/[^a-z0-9]/gi, '_');
+        this.title = this.info.basic_info.title?.replace(/[^a-z0-9A-Z_\-\(\)\[\]\~\<\>\s]/gi, '_');
 
         let downloadedBytesAudio = 0;
         let downloadedBytesVideo = 0;
@@ -85,7 +85,7 @@ export default class YouTubeVideoDownloader {
             xtags: audioFormat.xtags
         };
 
-        const streamPath = path.join(downloadPath, `${this.title!}_audio.webm`);
+        const streamPath = path.join(downloadPath, `${this.title!}${this.videoFormat ? '_audio' : ''}.webm`);
         this.audioOutput = createWriteStream(streamPath);
         return streamPath;
     }
@@ -101,7 +101,7 @@ export default class YouTubeVideoDownloader {
             xtags: videoFormat.xtags
         };
 
-        const streamPath = path.join(downloadPath, `${this.title!}_video.webm`);
+        const streamPath = path.join(downloadPath, `${this.title!}${this.audioFormat ? '_video' : ''}.webm`);
         this.videoOutput = createWriteStream(streamPath);
         return streamPath;
     }
@@ -125,4 +125,3 @@ export default class YouTubeVideoDownloader {
             this.videoOutput.end();
     }
 }
-
