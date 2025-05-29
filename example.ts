@@ -1,4 +1,4 @@
-import YouTubeVideoDownloader from "youtube-downloader";
+import YouTubeVideoDownloader from "@ximaz/youtube-downloader";
 
 const main = async () => {
     const downloader = new YouTubeVideoDownloader("<VIDEO_ID>",

@@ -1,5 +1,5 @@
 {
-  "name": "youtube-downloader",
+  "name": "@ximaz/youtube-downloader",
   "scripts": {
     "build": "bun run build.ts",
     "prepublishOnly": "bun run build"
